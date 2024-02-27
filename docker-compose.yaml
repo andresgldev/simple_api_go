@@ -1,0 +1,45 @@
+version: '3.9'
+services:
+
+  pg_db:
+    hostname: ${DB_HOST}
+    image: postgres:latest
+    container_name: pg_db
+    environment:
+      - POSTGRES_USER=${DB_USER}
+      - POSTGRES_PASSWORD=${DB_PASSWORD}
+      - POSTGRES_DB=${DB_NAME}
+      - DATABASE_HOST=${DB_HOST}
+    ports:
+      - 5432:5432
+    networks:
+      - simple_api
+    env_file:
+      - .env
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+  app:
+    build:
+      context: ./
+      dockerfile: ./Dockerfile
+    environment:
+      - POSTGRES_USER=${DB_USER}
+      - POSTGRES_PASSWORD=${DB_PASSWORD}
+      - POSTGRES_DB=${DB_NAME}
+      - DATABASE_HOST=${DB_HOST}
+      - DATABASE_PORT=${DB_PORT}
+    ports:
+      - 8080:8080
+    depends_on:
+      - pg_db
+    restart: on-failure
+    networks:
+      - simple_api
+
+volumes:
+  pgdata:
+
+networks:
+  simple_api:
+    driver: bridge
