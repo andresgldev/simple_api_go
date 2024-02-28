@@ -8,7 +8,7 @@ cp .env.example .env
 
 Una vez configurado las variables podemos levantar el servicio con docker con el siguiente comando
 ```
-docker-compose up -d
+docker-compose up --build -d
 ```
 
 Para detener la ejecucion lo haremos con

@@ -1,14 +1,16 @@
 package controllers
 
 import (
-	"fmt"
 	"net/http"
 )
 
-func Home(w http.ResponseWriter, r *http.Request) {
-	fmt.Fprintf(w, "Welcome to my website!")
+type HomeController struct {
 }
 
-func Prueba(w http.ResponseWriter, r *http.Request) {
-	fmt.Fprintf(w, "Lugar de prrre")
+func (c HomeController) Index(w http.ResponseWriter, r *http.Request) {
+	w.Write([]byte("Hi"))
+}
+
+func (c HomeController) Demo(w http.ResponseWriter, r *http.Request) {
+	w.Write([]byte("Demo"))
 }
