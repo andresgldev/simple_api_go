@@ -6,14 +6,9 @@ import (
 	"log"
 	"net/http"
 
+	"github.com/andresgldev/simple_api_go/api/models"
 	"github.com/go-chi/chi"
 )
-
-type User struct {
-	ID    int    `json:"id"`
-	Name  string `json:"name"`
-	Email string `json:"email"`
-}
 
 type UserController struct {
 	DB *sql.DB
@@ -28,9 +23,9 @@ func (c UserController) Index(w http.ResponseWriter, r *http.Request) {
 	}
 	defer rows.Close()
 
-	users := []User{}
+	users := []models.User{}
 	for rows.Next() {
-		var u User
+		var u models.User
 		if err := rows.Scan(&u.ID, &u.Name, &u.Email); err != nil {
 			log.Fatal(err)
 		}
@@ -45,7 +40,7 @@ func (c UserController) Index(w http.ResponseWriter, r *http.Request) {
 }
 func (c UserController) Show(w http.ResponseWriter, r *http.Request) {
 	id := chi.URLParam(r, "id")
-	var u User
+	var u models.User
 	err := c.DB.QueryRow("select * from users where id = $1 limit 1", id).Scan(&u.ID, &u.Name, &u.Email)
 	if err != nil {
 		w.WriteHeader(http.StatusNotFound)
@@ -54,7 +49,7 @@ func (c UserController) Show(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(u)
 }
 func (c UserController) Store(w http.ResponseWriter, r *http.Request) {
-	var u User
+	var u models.User
 	json.NewDecoder(r.Body).Decode(&u)
 
 	err := c.DB.QueryRow("insert into users (name, email) values ($1, $2) RETURNING id", u.Name, u.Email).Scan(&u.ID)
@@ -64,7 +59,7 @@ func (c UserController) Store(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(u)
 }
 func (c UserController) Update(w http.ResponseWriter, r *http.Request) {
-	var u User
+	var u models.User
 	json.NewDecoder(r.Body).Decode(&u)
 
 	id := chi.URLParam(r, "id")
