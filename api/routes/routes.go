@@ -1,7 +1,6 @@
 package routes
 
 import (
-	"database/sql"
 	"net/http"
 
 	"github.com/andresgldev/simple_api_go/api/controllers"
@@ -10,7 +9,7 @@ import (
 	"github.com/go-chi/chi/middleware"
 )
 
-func InitRoutes(db *sql.DB) http.Handler {
+func InitRoutes() http.Handler {
 	r := chi.NewRouter()
 
 	r.Use(middleware.Logger)
@@ -19,7 +18,7 @@ func InitRoutes(db *sql.DB) http.Handler {
 	r.Get("/demo", (controllers.HomeController{}).Demo)
 
 	r.Route("/user", func(r chi.Router) {
-		u := controllers.UserController{DB: db}
+		u := controllers.UserController{}
 		r.Use(middlewares.OnlyAdmin)
 		r.Get("/", u.Index)
 		r.Post("/", u.Store)
