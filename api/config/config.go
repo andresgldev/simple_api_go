@@ -43,12 +43,12 @@ func load() *Configuration {
 		panic(err)
 	}
 	if value := vars["APP_PORT"]; len(value) > 0 {
-		if intVal, err := strconv.Atoi(value); err != nil {
+		if intVal, err := strconv.Atoi(value); err == nil {
 			result.Port = intVal
 		}
 	}
 	if value := vars["DB_PORT"]; len(value) > 0 {
-		if intVal, err := strconv.Atoi(value); err != nil {
+		if intVal, err := strconv.Atoi(value); err == nil {
 			result.DBport = intVal
 		}
 	}
@@ -58,10 +58,10 @@ func load() *Configuration {
 	if value := vars["DB_PASS"]; len(value) > 0 {
 		result.DBpass = value
 	}
-	if value := vars["DB_host"]; len(value) > 0 {
+	if value := vars["DB_HOST"]; len(value) > 0 {
 		result.DBhost = value
 	}
-	if value := vars["DB_name"]; len(value) > 0 {
+	if value := vars["DB_NAME"]; len(value) > 0 {
 		result.DBname = value
 	}
 	return result

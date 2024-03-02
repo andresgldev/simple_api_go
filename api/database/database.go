@@ -5,6 +5,7 @@ import (
 	"fmt"
 
 	"github.com/andresgldev/simple_api_go/api/config"
+	_ "github.com/lib/pq"
 )
 
 var database *sql.DB
@@ -22,6 +23,6 @@ func initDatabase() *sql.DB {
 	if err != nil {
 		panic(err)
 	}
-	defer db.Close()
+	//defer db.Close()
 	return db
 }
