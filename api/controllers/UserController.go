@@ -7,6 +7,8 @@ import (
 
 	"github.com/andresgldev/simple_api_go/api/database"
 	"github.com/andresgldev/simple_api_go/api/models"
+	"github.com/andresgldev/simple_api_go/api/responses"
+	"github.com/andresgldev/simple_api_go/api/services"
 	"github.com/go-chi/chi"
 )
 
@@ -14,28 +16,12 @@ type UserController struct {
 }
 
 func (c UserController) Index(w http.ResponseWriter, r *http.Request) {
-	//w.Write([]byte("Index"))
-
-	rows, err := database.Get().Query("select * from users")
+	users, err := new(services.UserService).All()
 	if err != nil {
-		log.Fatal(err)
+		responses.ERROR(w, http.StatusBadGateway, nil)
+		return
 	}
-	defer rows.Close()
-
-	users := []models.User{}
-	for rows.Next() {
-		var u models.User
-		if err := rows.Scan(&u.ID, &u.Name, &u.Email); err != nil {
-			log.Fatal(err)
-		}
-		users = append(users, u)
-	}
-
-	if err := rows.Err(); err != nil {
-		log.Fatal(err)
-	}
-
-	json.NewEncoder(w).Encode(users)
+	responses.JSON(w, http.StatusOK, users)
 }
 func (c UserController) Show(w http.ResponseWriter, r *http.Request) {
 	id := chi.URLParam(r, "id")

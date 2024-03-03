@@ -7,6 +7,7 @@ import (
 )
 
 type Configuration struct {
+	//Context context.Context
 	Port   int
 	DBhost string
 	DBuser string
@@ -19,6 +20,7 @@ var config *Configuration
 
 func new() *Configuration {
 	return &Configuration{
+		//Context: context.Background(),
 		Port:   3000,
 		DBhost: "localhost",
 		DBuser: "root",
